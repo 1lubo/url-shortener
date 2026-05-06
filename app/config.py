@@ -1,8 +1,10 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
 
 
 class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+
     # App
     app_name: str = "URL Shortener"
     base_url: str = "http://localhost:8000"
@@ -22,10 +24,6 @@ class Settings(BaseSettings):
 
     # Short code settings
     short_code_length: int = 6
-
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
 
 
 @lru_cache

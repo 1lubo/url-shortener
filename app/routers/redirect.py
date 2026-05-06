@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Request, BackgroundTasks
@@ -62,7 +62,7 @@ async def redirect_to_url(
             raise HTTPException(status_code=410, detail="URL has been deactivated")
         
         # Check expiration
-        if url.expires_at and url.expires_at < datetime.utcnow():
+        if url.expires_at and url.expires_at < datetime.now(timezone.utc):
             raise HTTPException(status_code=410, detail="URL has expired")
         
         original_url = url.original_url

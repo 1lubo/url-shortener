@@ -25,12 +25,6 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Include routers
-app.include_router(auth.router)
-app.include_router(urls.router)
-app.include_router(redirect.router)
-
-
 @app.get("/health")
 async def health_check():
     """Health check endpoint for Fly.io."""
@@ -45,3 +39,9 @@ async def root():
         "docs": "/docs",
         "health": "/health",
     }
+
+
+# Include routers - redirect router must be last since it has catch-all /{short_code}
+app.include_router(auth.router)
+app.include_router(urls.router)
+app.include_router(redirect.router)

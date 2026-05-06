@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, HttpUrl, Field
+from pydantic import BaseModel, ConfigDict, HttpUrl, Field
 
 
 class URLCreate(BaseModel):
@@ -16,6 +16,8 @@ class URLCreate(BaseModel):
 
 
 class URLResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     short_code: str
     short_url: str
@@ -23,9 +25,6 @@ class URLResponse(BaseModel):
     created_at: datetime
     expires_at: datetime | None = None
     is_active: bool
-
-    class Config:
-        from_attributes = True
 
 
 class URLUpdate(BaseModel):

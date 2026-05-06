@@ -1,15 +1,14 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class ClickInfo(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     clicked_at: datetime
     referrer: str | None
     user_agent: str | None
-
-    class Config:
-        from_attributes = True
 
 
 class URLStats(BaseModel):

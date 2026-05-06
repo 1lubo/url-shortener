@@ -1,10 +1,14 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import String, Text, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+
+def utc_now():
+    return datetime.now(timezone.utc)
 
 
 class URL(Base):
@@ -30,12 +34,12 @@ class URL(Base):
         index=True,
     )
     created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=datetime.utcnow,
+        DateTime(timezone=True),
+        default=utc_now,
         nullable=False,
     )
     expires_at: Mapped[datetime | None] = mapped_column(
-        DateTime,
+        DateTime(timezone=True),
         nullable=True,
     )
     is_active: Mapped[bool] = mapped_column(
