@@ -161,4 +161,4 @@ url-shortener/
 
 ## License
 
-MIT
+MIT License (MIT)
