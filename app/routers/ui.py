@@ -13,7 +13,7 @@ settings = get_settings()
 @router.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     """Render the home page."""
-    return templates.TemplateResponse("home.html", {"request": request})
+    return templates.TemplateResponse(request, "home.html")
 
 
 @router.post("/shorten", response_class=HTMLResponse)
@@ -44,18 +44,18 @@ async def shorten_url(
             short_url = f"{settings.base_url}/{shortened.short_code}"
             
             return templates.TemplateResponse(
+                request,
                 "partials/result.html",
                 {
-                    "request": request,
                     "short_url": short_url,
                     "original_url": shortened.original_url,
                 },
             )
         except ValueError as e:
             return templates.TemplateResponse(
+                request,
                 "partials/result.html",
                 {
-                    "request": request,
                     "error": str(e),
                 },
             )
