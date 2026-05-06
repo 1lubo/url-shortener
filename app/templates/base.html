@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}URL Shortener{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <style>
+        .htmx-request .htmx-indicator { display: inline-block; }
+        .htmx-indicator { display: none; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 to-slate-800 min-h-screen text-white">
+    <div class="container mx-auto px-4 py-8 max-w-2xl">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold mb-2">
+                <a href="/" class="hover:text-blue-400 transition-colors">🔗 URL Shortener</a>
+            </h1>
+            <p class="text-slate-400">Make your links short and sweet</p>
+        </header>
+        
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+        
+        <footer class="mt-16 text-center text-slate-500 text-sm">
+            <p>
+                Vibecoded with Claude Opus 4.5 via 
+                <a href="https://www.augmentcode.com" class="text-blue-400 hover:underline">Augment Code</a>
+            </p>
+            <p class="mt-2">
+                <a href="/docs" class="text-slate-400 hover:text-white transition-colors">API Docs</a>
+                &middot;
+                <a href="https://github.com/1lubo/url-shortener" class="text-slate-400 hover:text-white transition-colors">GitHub</a>
+            </p>
+        </footer>
+    </div>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

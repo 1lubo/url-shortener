@@ -4,7 +4,7 @@ from fastapi import FastAPI
 
 from app.config import get_settings
 from app.redis import init_redis, close_redis
-from app.routers import urls, auth, redirect
+from app.routers import urls, auth, redirect, ui
 
 settings = get_settings()
 
@@ -31,17 +31,10 @@ async def health_check():
     return {"status": "healthy"}
 
 
-@app.get("/")
-async def root():
-    """Root endpoint."""
-    return {
-        "name": settings.app_name,
-        "docs": "/docs",
-        "health": "/health",
-    }
-
-
-# Include routers - redirect router must be last since it has catch-all /{short_code}
+# Include routers
+# UI router first for / and /shorten routes
+app.include_router(ui.router)
 app.include_router(auth.router)
 app.include_router(urls.router)
+# Redirect router must be last since it has catch-all /{short_code}
 app.include_router(redirect.router)
