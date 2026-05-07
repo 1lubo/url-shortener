@@ -11,7 +11,9 @@ from app.dependencies import (
     get_cache_service,
     get_current_user,
     get_current_user_optional,
+    rate_limit_strict,
 )
+from app.services.rate_limit_service import RateLimitResult
 from app.models.user import User
 from app.schemas.url import URLCreate, URLResponse, URLUpdate, URLListResponse
 from app.schemas.stats import URLStats, ClickInfo
@@ -29,6 +31,7 @@ async def create_short_url(
     url_data: URLCreate,
     url_service: Annotated[URLService, Depends(get_url_service)],
     current_user: Annotated[User | None, Depends(get_current_user_optional)],
+    _rate_limit: Annotated[RateLimitResult, Depends(rate_limit_strict)],
 ):
     """Create a new shortened URL."""
     # Check if custom alias is already taken

@@ -3,9 +3,10 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.dependencies import get_auth_service
+from app.dependencies import get_auth_service, rate_limit_auth
 from app.schemas.user import UserCreate, UserResponse, Token
 from app.services.auth_service import AuthService, create_access_token
+from app.services.rate_limit_service import RateLimitResult
 
 router = APIRouter(prefix="/api/v1/auth", tags=["auth"])
 
@@ -14,6 +15,7 @@ router = APIRouter(prefix="/api/v1/auth", tags=["auth"])
 async def register(
     user_data: UserCreate,
     auth_service: Annotated[AuthService, Depends(get_auth_service)],
+    _rate_limit: Annotated[RateLimitResult, Depends(rate_limit_auth)],
 ):
     """Register a new user."""
     # Check if email already exists
@@ -36,6 +38,7 @@ async def register(
 async def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     auth_service: Annotated[AuthService, Depends(get_auth_service)],
+    _rate_limit: Annotated[RateLimitResult, Depends(rate_limit_auth)],
 ):
     """Login and get access token."""
     user = await auth_service.authenticate(form_data.username, form_data.password)

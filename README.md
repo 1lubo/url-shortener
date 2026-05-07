@@ -9,6 +9,7 @@ A URL shortening service demonstrating REST API design, PostgreSQL database work
 - **URL Shortening** - Create short URLs with custom aliases or auto-generated codes
 - **QR Code Generation** - Generate downloadable QR codes for any shortened URL
 - **Click Analytics** - Track clicks with timestamps, referrers, and user agents
+- **Rate Limiting** - Redis-based sliding window rate limiting with per-IP tracking
 - **Redis Caching** - Fast redirects with cached URL lookups
 - **Optional Auth** - JWT authentication for managing your links
 - **REST API** - Clean API design with OpenAPI documentation

@@ -6,10 +6,11 @@ from fastapi.responses import RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
-from app.dependencies import get_url_service, get_cache_service
+from app.dependencies import get_url_service, get_cache_service, rate_limit_default
 from app.services.url_service import URLService
 from app.services.cache_service import CacheService
 from app.services.click_service import ClickService
+from app.services.rate_limit_service import RateLimitResult
 
 router = APIRouter(tags=["redirect"])
 
@@ -39,6 +40,7 @@ async def redirect_to_url(
     url_service: Annotated[URLService, Depends(get_url_service)],
     cache_service: Annotated[CacheService, Depends(get_cache_service)],
     db: Annotated[AsyncSession, Depends(get_db)],
+    _rate_limit: Annotated[RateLimitResult, Depends(rate_limit_default)],
 ):
     """Redirect to the original URL."""
     # Try cache first

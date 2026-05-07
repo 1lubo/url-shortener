@@ -9,8 +9,9 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sess
 
 from app.main import app
 from app.database import Base, get_db
-from app.dependencies import get_cache_service
+from app.dependencies import get_cache_service, get_rate_limit_service
 from app.services.cache_service import CacheService
+from app.services.rate_limit_service import RateLimitService, RateLimitResult
 from app.config import get_settings
 
 settings = get_settings()
@@ -59,6 +60,26 @@ class MockCacheService:
         await self.delete_url(short_code)
 
 
+class MockRateLimitService:
+    """Mock rate limit service for testing - always allows requests."""
+
+    async def check_rate_limit(
+        self,
+        key: str,
+        limit: int | None = None,
+        window_seconds: int | None = None,
+    ) -> RateLimitResult:
+        return RateLimitResult(
+            allowed=True,
+            limit=limit or 60,
+            remaining=59,
+            reset_at=9999999999,
+        )
+
+    async def get_remaining(self, key: str, limit: int | None = None) -> int:
+        return limit or 60
+
+
 @pytest_asyncio.fixture(scope="function")
 async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
     async def override_get_db():
@@ -67,8 +88,12 @@ async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
     async def override_get_cache_service():
         return MockCacheService()
 
+    async def override_get_rate_limit_service():
+        return MockRateLimitService()
+
     app.dependency_overrides[get_db] = override_get_db
     app.dependency_overrides[get_cache_service] = override_get_cache_service
+    app.dependency_overrides[get_rate_limit_service] = override_get_rate_limit_service
 
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as ac:

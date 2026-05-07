@@ -25,6 +25,11 @@ class Settings(BaseSettings):
     # Short code settings
     short_code_length: int = 6
 
+    # Rate limiting (requests per window)
+    rate_limit_requests: int = 60  # requests allowed per window
+    rate_limit_window_seconds: int = 60  # window size in seconds
+    rate_limit_burst: int = 10  # extra burst capacity for short spikes
+
 
 @lru_cache
 def get_settings() -> Settings:
