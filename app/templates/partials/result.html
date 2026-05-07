@@ -14,18 +14,18 @@
             </svg>
             <span class="font-medium">URL shortened successfully!</span>
         </div>
-        
+
         <div>
             <label class="block text-sm text-slate-400 mb-1">Your short URL</label>
             <div class="flex gap-2">
-                <input 
-                    type="text" 
+                <input
+                    type="text"
                     id="short-url"
-                    value="{{ short_url }}" 
+                    value="{{ short_url }}"
                     readonly
                     class="flex-1 px-4 py-3 bg-slate-900 border border-slate-600 rounded-lg text-blue-400 font-mono"
                 >
-                <button 
+                <button
                     onclick="copyToClipboard()"
                     class="px-4 py-3 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors flex items-center gap-2"
                 >
@@ -36,15 +36,39 @@
                 </button>
             </div>
         </div>
-        
+
         <div class="text-sm text-slate-400">
-            <span class="text-slate-500">Original:</span> 
+            <span class="text-slate-500">Original:</span>
             <a href="{{ original_url }}" target="_blank" class="text-slate-300 hover:text-white break-all">
                 {{ original_url | truncate(60) }}
             </a>
         </div>
+
+        <!-- QR Code Section -->
+        <div class="pt-4 border-t border-slate-700">
+            <div class="flex items-center justify-between mb-3">
+                <label class="block text-sm text-slate-400">QR Code</label>
+                <a
+                    href="{{ qr_url }}"
+                    download="{{ short_code }}-qr.png"
+                    class="text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    Download
+                </a>
+            </div>
+            <div class="flex justify-center bg-white rounded-lg p-4">
+                <img
+                    src="{{ qr_url }}"
+                    alt="QR Code for {{ short_url }}"
+                    class="w-32 h-32"
+                >
+            </div>
+        </div>
     </div>
-    
+
     <script>
         function copyToClipboard() {
             const url = document.getElementById('short-url').value;

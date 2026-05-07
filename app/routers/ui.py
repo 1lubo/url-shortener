@@ -51,6 +51,7 @@ async def shorten_url(
             shortened = await url_service.create(url_data=url_data, user_id=None)
 
             short_url = f"{settings.base_url}/{shortened.short_code}"
+            qr_url = f"/api/v1/urls/{shortened.short_code}/qr"
 
             return templates.TemplateResponse(
                 request,
@@ -58,6 +59,8 @@ async def shorten_url(
                 {
                     "short_url": short_url,
                     "original_url": shortened.original_url,
+                    "qr_url": qr_url,
+                    "short_code": shortened.short_code,
                 },
             )
         except ValidationError as e:

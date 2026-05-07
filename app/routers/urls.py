@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import get_settings
@@ -17,6 +18,7 @@ from app.schemas.stats import URLStats, ClickInfo
 from app.services.url_service import URLService
 from app.services.cache_service import CacheService
 from app.services.click_service import ClickService
+from app.services.qr_service import QRService
 
 router = APIRouter(prefix="/api/v1/urls", tags=["urls"])
 settings = get_settings()
@@ -158,4 +160,39 @@ async def get_url_stats(
             )
             for click in recent_clicks
         ],
+    )
+
+
+@router.get("/{short_code}/qr")
+async def get_qr_code(
+    short_code: str,
+    url_service: Annotated[URLService, Depends(get_url_service)],
+    size: int = 10,
+):
+    """
+    Generate a QR code PNG image for a shortened URL.
+
+    Args:
+        short_code: The short code of the URL
+        size: QR code size (pixels per module), default 10, range 5-20
+    """
+    url = await url_service.get_by_short_code(short_code)
+    if not url:
+        raise HTTPException(status_code=404, detail="URL not found")
+    if not url.is_active:
+        raise HTTPException(status_code=410, detail="URL has been deactivated")
+
+    # Clamp size to reasonable range
+    size = max(5, min(20, size))
+
+    short_url = f"{settings.base_url}/{short_code}"
+    qr_bytes = QRService.generate_qr_code(short_url, size=size)
+
+    return Response(
+        content=qr_bytes,
+        media_type="image/png",
+        headers={
+            "Content-Disposition": f'inline; filename="{short_code}-qr.png"',
+            "Cache-Control": "public, max-age=86400",  # Cache for 1 day
+        },
     )

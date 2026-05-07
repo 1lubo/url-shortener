@@ -7,6 +7,7 @@ A URL shortening service demonstrating REST API design, PostgreSQL database work
 ## Features
 
 - **URL Shortening** - Create short URLs with custom aliases or auto-generated codes
+- **QR Code Generation** - Generate downloadable QR codes for any shortened URL
 - **Click Analytics** - Track clicks with timestamps, referrers, and user agents
 - **Redis Caching** - Fast redirects with cached URL lookups
 - **Optional Auth** - JWT authentication for managing your links
@@ -71,6 +72,7 @@ uvicorn app.main:app --reload
 | `POST` | `/api/v1/urls` | Create short URL |
 | `GET` | `/{short_code}` | Redirect to original URL |
 | `GET` | `/api/v1/urls/{short_code}/stats` | Get click statistics |
+| `GET` | `/api/v1/urls/{short_code}/qr` | Get QR code PNG image |
 
 ### Authentication
 
