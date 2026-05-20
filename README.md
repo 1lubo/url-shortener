@@ -2,6 +2,8 @@
 
 A URL shortening service demonstrating REST API design, PostgreSQL database work, and Redis caching.
 
+🚀 **Live at [lubo-shortly.fly.dev](https://lubo-shortly.fly.dev)**
+
 > 🤖 Vibecoded with [Claude Opus 4.5](https://www.anthropic.com/claude) via [Augment Code](https://www.augmentcode.com/)
 
 ## Features
